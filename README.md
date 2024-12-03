@@ -8,7 +8,8 @@ This is a discord bot used in the `FarmSim Society` FS community.
   - /transfer player user \<username\> amount \<amount\>
   - /transfer server 
 
-# Database Schema
+<details>
+<summary>Database Schema</summary>
 
 - users
     - id Integer Primary Key
@@ -32,6 +33,7 @@ This is a discord bot used in the `FarmSim Society` FS community.
   - PRIMARY KEY (user_id, server_id)
   - FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   - FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE
+</details>
 
 # Alembic commands
 ```shell
