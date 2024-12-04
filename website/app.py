@@ -1,11 +1,15 @@
 import sqlite3
 from getpass import getpass
+from math import ceil
 
 from flask import Flask
 from werkzeug.security import generate_password_hash
 
 from app import create_app, db
 from app.models import User
+
+
+PER_page= 5 #number of items to show per page
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # For session management

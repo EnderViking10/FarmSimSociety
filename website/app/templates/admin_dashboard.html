@@ -72,6 +72,56 @@
     </select>
     <button type="submit">Delete User</button>
 </form>
+<!-- Pagination for Users -->
+<div>
+    <h3>Users</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Balance</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        {% for page in range(1, user_pages + 1) %}
+        <a href="?page={{ page }}">{{ page }}</a>
+        {% endfor %}
+    </div>
+</div>
 
+<!-- Pagination for Transactions -->
+<div>
+    <h3>Recent Transactions</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction[0] }}</td>
+            <td>{{ transaction[1] }}</td>
+            <td>{{ transaction[2] }}</td>
+            <td>{{ transaction[3] }}</td>
+            <td>{{ transaction[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        {% for page in range(1, transaction_pages + 1) %}
+        <a href="?page={{ page }}">{{ page }}</a>
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>
