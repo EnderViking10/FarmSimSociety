@@ -44,6 +44,11 @@ The bot component of the community
     - PRIMARY KEY (user_id, server_id)
     - FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     - FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE
+- properties
+  - id Integer primary key
+  - property_id integer
+  - discord_id INTEGER FOREIGN KEY users(discord_id)
+  - server_id INTEGER FOREIGN KEY servers(id)
 
 </details>
 
@@ -125,6 +130,8 @@ The website component of the community
 <details>
 <summary>Todo</summary>
 
+- Add notification system 
+  - auction house
 </details>
 
 </details>
