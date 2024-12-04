@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FarmSimSociety{% endblock %}</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
+    <!-- Immediate Theme Application to Prevent Flash -->
+    <script>
+        (function () {
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+<!-- Navbar -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">FarmSim Society</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+            <!-- Dark Mode Toggle -->
+            <div class="form-check form-switch ms-3">
+                <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-4">
+    {% block content %}
+        <!-- Page-specific content will go here -->
+    {% endblock %}
+</div>
+
+<!-- Footer -->
+<footer id="footer" class="bg-light py-4 mt-4">
+    <div class="container text-center">
+        <p class="mb-0">© 2024 FarmSimSociety. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<!-- Apply Saved Theme and Toggle Functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.getElementById('darkModeToggle');
+        const navbar = document.getElementById('navbar');
+        const footer = document.getElementById('footer');
+        const currentTheme = localStorage.getItem('theme');
+
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+            toggle.checked = true;
+            navbar.classList.replace('navbar-light', 'navbar-dark');
+            navbar.classList.add('bg-dark');
+            footer.classList.replace('bg-light', 'bg-dark');
+        }
+
+        // Toggle dark mode on checkbox change
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                document.documentElement.classList.add('dark-mode');
+                navbar.classList.replace('navbar-light', 'navbar-dark');
+                navbar.classList.add('bg-dark');
+                footer.classList.replace('bg-light', 'bg-dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                navbar.classList.replace('navbar-dark', 'navbar-light');
+                navbar.classList.remove('bg-dark');
+                footer.classList.replace('bg-dark', 'bg-light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    });
+</script>
+</body>
+</html>

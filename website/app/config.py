@@ -10,22 +10,17 @@ class Config:
     PORT = int(os.environ.get('FLASK_RUN_PORT', 5000))
 
     # Database settings
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///data/database.db')  # Use SQLite by default
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevelopmentConfig(Config):
     """Development-specific configuration."""
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASE_DIR, '../data', 'database.db')}"
     DEBUG = True
-
-
-class TestingConfig(Config):
-    """Testing-specific configuration."""
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///data/database.db'
 
 
 class ProductionConfig(Config):
     """Production-specific configuration."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///data/database.db')
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME')}"
