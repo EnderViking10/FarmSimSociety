@@ -39,7 +39,7 @@ def admin_dashboard():
 
     # Fetch recent transactions
     #cursor.execute("SELECT t.id, u.username, t.type, t.amount, t.timestamp FROM transactions t "
-        "JOIN users u ON t.user_id = u.id ORDER BY t.timestamp DESC LIMIT 10")
+    #   "JOIN users u ON t.user_id = u.id ORDER BY t.timestamp DESC LIMIT 10")
     transactions = cursor.fetchall()
 
     conn.close()
@@ -97,3 +97,27 @@ def delete_user():
     conn.close()
 
     return redirect(url_for('admin_dashboard'))
+@app.route('/admin/dashboard')
+#@login_required
+def admin_dashboard():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Fetch users with pagination logic
+    PER_PAGE = 5
+    cursor.execute("SELECT COUNT(*) FROM users")
+    total_users = cursor.fetchone()[0]
+    total_pages = ceil(total_users / PER_PAGE)
+
+    # Example for current page logic (you can use query params for dynamic page selection)
+    current_page = 1  # Default to page 1
+    offset = (current_page - 1) * PER_PAGE
+    cursor.execute("SELECT id, username, balance FROM users LIMIT ? OFFSET ?", (PER_PAGE, offset))
+    users = cursor.fetchall()
+
+    # Generate list of page numbers
+    user_pages = range(1, total_pages + 1)
+
+    conn.close()
+
+    return render_template('admin_dashboard.html', users=users, user_pages=user_pages)

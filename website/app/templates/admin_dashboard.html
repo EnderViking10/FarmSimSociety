@@ -9,6 +9,11 @@
 <body>
     <h1>Admin Dashboard</h1>
     <a href="/admin/logout">Logout</a>
+<ul>
+    {% for page in user_pages %}
+        <li>{{ page }}</li>
+    {% endfor %}
+</ul>
 
     <h2>Users</h2>
     <table border="1">
