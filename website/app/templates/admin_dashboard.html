@@ -67,9 +67,8 @@
     <input type="number" name="balance" placeholder="Starting Balance" required>
     <button type="submit">Add User</button>
 </form>
-
 <h2>Delete User</h2>
-<form method="POST" action="/admin/delete_user">
+<form method="POST" action="/admin/delete_user" onsubmit="return confirm('Are you sure you want to delete this user?');">
     <select name="user_id">
         {% for user in users %}
         <option value="{{ user[0] }}">{{ user[1] }}</option>
