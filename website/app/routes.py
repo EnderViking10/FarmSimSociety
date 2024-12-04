@@ -38,7 +38,7 @@ def admin_dashboard():
     users = cursor.fetchall()
 
     # Fetch recent transactions
-    cursor.execute("SELECT t.id, u.username, t.type, t.amount, t.timestamp FROM transactions t "
+    #cursor.execute("SELECT t.id, u.username, t.type, t.amount, t.timestamp FROM transactions t "
                    "JOIN users u ON t.user_id = u.id ORDER BY t.timestamp DESC LIMIT 10")
     transactions = cursor.fetchall()
 
