@@ -14,7 +14,7 @@ def admin_login():
 
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM admin WHERE username = ? AND password = ?", (username, password))
+        #cursor.execute("SELECT * FROM admin WHERE username = ? AND password = ?", (username, password))
         admin = cursor.fetchone()
         conn.close()
 
@@ -34,7 +34,7 @@ def admin_dashboard():
     cursor = conn.cursor()
 
     # Fetch all users
-    cursor.execute("SELECT id, username, balance FROM users")
+    #cursor.execute("SELECT id, username, balance FROM users")
     users = cursor.fetchall()
 
     # Fetch recent transactions
@@ -62,7 +62,7 @@ def edit_balance():
 
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute("UPDATE users SET balance = ? WHERE id = ?", (new_balance, user_id))
+    #cursor.execute("UPDATE users SET balance = ? WHERE id = ?", (new_balance, user_id))
     conn.commit()
     conn.close()
 
@@ -77,7 +77,7 @@ def add_user():
 
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users (username, balance) VALUES (?, ?)", (username, balance))
+    #cursor.execute("INSERT INTO users (username, balance) VALUES (?, ?)", (username, balance))
     conn.commit()
     conn.close()
 
@@ -91,8 +91,8 @@ def delete_user():
 
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
-    cursor.execute("DELETE FROM transactions WHERE user_id = ?", (user_id,))
+    #cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    #cursor.execute("DELETE FROM transactions WHERE user_id = ?", (user_id,))
     conn.commit()
     conn.close()
 
