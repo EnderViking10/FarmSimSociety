@@ -1,0 +1,33 @@
+/* Default dark mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Custom styles for light mode */
+body.light-mode {
+    background-color: #f8f9fa;
+    color: #000000;
+}
+
+/* Navbar dark mode adjustments */
+body.dark-mode .navbar {
+    background-color: #333333;
+}
+
+/* Navbar light mode adjustments */
+body.light-mode .navbar {
+    background-color: #ffffff;
+}
+
+/* Footer dark mode adjustments */
+body.dark-mode footer {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+/* Footer light mode adjustments */
+body.light-mode footer {
+    background-color: #f8f9fa;
+    color: #000000;
+}

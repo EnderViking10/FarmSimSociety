@@ -1,11 +1,10 @@
 import asyncio
 
 import discord
+from database import UserRepository
 from discord import Member, Guild
 from discord.ext import commands
 import json
-
-from utils.database import get_db, User, add_user
 
 
 class General(commands.Cog):
@@ -23,7 +22,7 @@ class General(commands.Cog):
             await channel.send(f"Welcome {member.mention}!")
 
         # Adds the user to the database
-        add_user(member)
+        UserRepository.create_user(self.bot.session, username=member.name, discord_id=member.id)
 
     # Event Listener: On Bot Added to a Guild
     @commands.Cog.listener()
@@ -33,9 +32,9 @@ class General(commands.Cog):
         for member in members:
             if member.bot:
                 continue
-            if User.get_user(next(get_db()), member.id):
+            if UserRepository.get_user_by_discord_id(self.bot.session, member.id):
                 continue
-            add_user(member)
+            UserRepository.create_user(self.bot.session, username=member.name, discord_id=member.id)
 
     # Event Listener: On User Update
     @commands.Cog.listener()
@@ -43,25 +42,7 @@ class General(commands.Cog):
         """Updates the database if a user changes their username."""
         if before.name == after.name:
             return
-        User.update_username(next(get_db()), before.id, after.name)
-
-    # WebSocket Event Listener
-    @commands.Cog.listener()
-    async def on_websocket_message(self, message):
-        """Processes WebSocket messages from FS25 servers."""
-        data = json.loads(message)
-
-        # Handle in-game chat messages
-        if data["event"] == "chat_message":
-            server_id = data["server_id"]
-            player_name = data["player_name"]
-            chat_message = data["message"]
-
-            # Replace with your Discord channel ID mapped to the FS25 server_id
-            channel_id = 123456789012345678  # Example channel ID
-            channel = self.bot.get_channel(channel_id)
-            if channel:
-                await channel.send(f"**{player_name}:** {chat_message}")
+        UserRepository.update_username(self.bot.session, before.id, after.name)
 
     # Sync Discord Messages to FS25
     @commands.Cog.listener()
@@ -86,6 +67,7 @@ class General(commands.Cog):
                 await asyncio.gather(*(client.send(json.dumps(payload)) for client in self.connected_clients))
             else:
                 await message.channel.send("No FS25 servers connected to receive this message.")
+
 
 async def setup(bot):
     """Loads the General cog into the bot."""

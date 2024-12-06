@@ -1,53 +1,51 @@
-from getpass import getpass
+from database import Database, Base
+from database import UserRepository
+from flask import Flask
+from flask_login import LoginManager
+from flask_migrate import Migrate
 
-from database import Base, get_engine, get_session, User
-from sqlalchemy.exc import SQLAlchemyError
-from werkzeug.security import generate_password_hash
+from config import Config
 
-from app import create_app
+# Create the global objects
+migrate = Migrate()
+login = LoginManager()
 
-app = create_app()
-
-
-@app.cli.command("initdb")
-def init_db():
-    """Initialize the database."""
-    engine = get_engine(app.config["SQLALCHEMY_DATABASE_URI"])
-    try:
-        Base.metadata.create_all(bind=engine)
-        print("Database initialized successfully!")
-    except SQLAlchemyError as e:
-        print(f"Error initializing the database: {e}")
+db = Database(Config.SQLALCHEMY_DATABASE_URI)
+session = db.get_session()
 
 
-@app.cli.command("createuser")
-def create_user():
-    """Create a new user."""
-    engine = get_engine(app.config["SQLALCHEMY_DATABASE_URI"])
-    session_local = get_session(engine)
+def create_app(config_class=Config):
+    # Create and configure the app
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    app.config['SESSION_COOKIE_SAMESITE'] = "Lax"
+    app.config['SESSION_COOKIE_SECURE'] = False
 
-    username = input("Enter username: ")
-    password = getpass("Enter password: ")
-    admin = input("Is admin (Y/n): ")
-    if admin.lower() == "y":
-        admin = True
-    elif admin.lower() == "n":
-        admin = False
-    else:
-        admin = False
+    # init all the packages
+    login.init_app(app)
+    login.login_view = 'auth.login'
+    login.login_message = 'Please log in to access this page.'
 
-    with session_local() as session:
-        user = User(
-            username=username,
-            password=generate_password_hash(password),
-            is_admin=admin,
-            discord_id=11111
-        )
-        session.add(user)
-        session.commit()
-        role = "Admin" if admin else "Regular"
-        print(f"{role} user '{username}' created successfully!")
+    # The user loader for flask_login
+    @login.user_loader
+    def load_user(user_id):
+        return UserRepository.get_user_by_id(session, user_id)
+
+    from main import bp as main_bp
+    app.register_blueprint(main_bp)
+
+    from admin import bp as admin_bp
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+
+    from auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    @app.cli.command('initdb')
+    def initdb():
+        Base.metadata.create_all(bind=db.engine)
+
+    return app
 
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    application = create_app()
