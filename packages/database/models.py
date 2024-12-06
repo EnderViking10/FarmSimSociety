@@ -51,3 +51,4 @@ class Auction(Base):
     id = Column(Integer, primary_key=True, index=True)
     server_id = Column(Integer, ForeignKey("servers.id"), nullable=False)
     property_id = Column(Integer, ForeignKey("properties.id"), nullable=False)
+    cost = Column(Integer)
