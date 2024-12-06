@@ -201,6 +201,10 @@ class ServerRepository
     get_server_by_id(session, server_id)
     set_ip(session, server_id, ip)
     set_map(session, server_id, map)
+    
+class PropertyRepository
+    create_property(session, server_id, user_id, image, size)
+    get_property_by_id(session, property_id)
 ```
 </details>
 

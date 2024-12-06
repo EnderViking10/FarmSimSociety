@@ -69,9 +69,10 @@ class ServerRepository:
 
 class PropertyRepository:
     @staticmethod
-    def create_property(session: Session, server_id: int, user_id: int, image: str, size: int,
+    def create_property(session: Session, server_id: int, user_id: int, property_number: int, image: str, size: int,
                         price: int) -> Properties | None:
-        properties = Properties(server_id=server_id, user_id=user_id, image=image, size=size, price=price)
+        properties = Properties(server_id=server_id, user_id=user_id, property_number=property_number, image=image,
+                                size=size, price=price)
         session.add(properties)
         session.commit()
         session.refresh(properties)
