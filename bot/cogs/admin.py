@@ -3,11 +3,13 @@ from utils.permissions import has_any_role
 import asyncio
 import json
 
+from packages.database import UserRepository
+
+
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
         self._last_member = None
-        self.connected_clients = set()  # WebSocket connections will be added here
 
     @commands.hybrid_command(name="sync_commands", description="Sync commands")
     @has_any_role("Owner", "Co Owner")
@@ -39,42 +41,30 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="add_money", description="Add money to a farm in FS25")
     @has_any_role("Owner", "Co Owner")
-    async def add_money(self, ctx: commands.Context, farm_id: int, amount: int):
+    async def add_money(self, ctx: commands.Context, user: discord.User, amount: int):
         """Adds money to a specific farm."""
         if amount <= 0:
             await ctx.reply("Amount must be greater than 0!")
             return
 
-        payload = {
-            "event": "add_money",
-            "server_id": "your_unique_server_id",  # Replace with your FS25 server_id
-            "farm_id": farm_id,
-            "amount": amount
-        }
+        UserRepository.add_money(self.bot.session, user.id, amount)
 
         try:
-            await self.send_to_clients(payload)
-            await ctx.reply(f"Requested to add ${amount} to Farm {farm_id}.")
+            await ctx.reply(f"Added {amount} to {user.name}")
         except RuntimeError as e:
             await ctx.reply(str(e))
 
     @commands.hybrid_command(name="remove_money", description="Remove money from a farm in FS25")
     @has_any_role("Owner", "Co Owner")
-    async def remove_money(self, ctx: commands.Context, farm_id: int, amount: int):
+    async def remove_money(self, ctx: commands.Context, server_id: int, farm_id: int, amount: int):
         """Removes money from a specific farm."""
         if amount <= 0:
             await ctx.reply("Amount must be greater than 0!")
             return
 
-        payload = {
-            "event": "remove_money",
-            "server_id": "your_unique_server_id",
-            "farm_id": farm_id,
-            "amount": amount
-        }
+
 
         try:
-            await self.send_to_clients(payload)
             await ctx.reply(f"Requested to remove ${amount} from Farm {farm_id}.")
         except RuntimeError as e:
             await ctx.reply(str(e))
