@@ -158,6 +158,8 @@ The FS25 mod component of the community
 
 </details>
 
+<br/>
+
 <details>
 <summary>Database API</summary>
 
@@ -165,6 +167,7 @@ The Database package being used for the server and the bot
 
 <details>
 <summary>Todo</summary>
+
 - Add remove_user method
 - Make ServerRepository methods
 - Make AuctionRepository methods
