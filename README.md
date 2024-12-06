@@ -3,23 +3,6 @@
 FarmSim Society is a Farming Simulator community. The 3 components are the website, discord bot, and FS25 mod
 
 <details>
-<summary>Bot</summary>
-
-The bot component of the community
-
-<details>
-<summary>Bot commands</summary>
-
-- ## Economy
-    - /bank - Shows users bank accont
-    - /transfer player user \<username\> amount \<amount\>
-    - /transfer server
-
-</details>
-
-<br/>
-
-<details>
 <summary>Database Schema</summary>
 
 - users
@@ -51,6 +34,27 @@ The bot component of the community
   - server_id INTEGER FOREIGN KEY servers(id)
 
 </details>
+
+<br/>
+
+<details>
+<summary>Bot</summary>
+
+The bot component of the community
+
+<details>
+<summary>Bot commands</summary>
+
+- ## Economy
+    - /bank - Shows users bank account
+    - /transfer player user \<username\> amount \<amount\>
+    - /transfer server
+
+</details>
+
+<br/>
+
+
 
 <br/>
 
