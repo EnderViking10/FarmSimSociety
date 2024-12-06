@@ -3,3 +3,5 @@
 data/
 .idea/
 __pycache__/
+/packages/database.egg-info/
+/packages/venv/
