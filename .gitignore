@@ -1,7 +1,11 @@
 .venv/
+venv/
 .env
 data/
 .idea/
 __pycache__/
 /packages/database.egg-info/
 /packages/venv/
+.log/
+bot/bot_errors.log
+bot/bot_info.log

@@ -39,6 +39,7 @@ class Properties(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     server_id = Column(Integer, ForeignKey("servers.id"), nullable=False)
+    property_number = Column(Integer, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     image = Column(String, nullable=False)
     size = Column(Integer, nullable=False)
@@ -51,3 +52,4 @@ class Auction(Base):
     id = Column(Integer, primary_key=True, index=True)
     server_id = Column(Integer, ForeignKey("servers.id"), nullable=False)
     property_id = Column(Integer, ForeignKey("properties.id"), nullable=False)
+    cost = Column(Integer)

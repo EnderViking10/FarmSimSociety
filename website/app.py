@@ -40,6 +40,9 @@ def create_app(config_class=Config):
     from auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
+    from auction import bp as auction_bp
+    app.register_blueprint(auction_bp, url_prefix='/auction')
+
     @app.cli.command('initdb')
     def initdb():
         Base.metadata.create_all(bind=db.engine)
