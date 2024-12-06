@@ -173,4 +173,35 @@ The Database package being used for the server and the bot
 - Make AuctionRepository methods
 </details>
 
+<details>
+<summary>Docs</summary>
+
+``` python
+Class Database
+    get_session()
+
+session = from app import session
+
+class UserRepository()
+    create_user(session, username, discord_id, admin: False)
+    get_user_by_discord_id(session, discord_id)
+    get_user_by_id(session, user_id)
+    add_money(session, discord_id, amount)
+    remove_money(session, discord_id, amount)
+    update_username(session, discord_id, username)
+    remove_user(session, discord_id)
+
+class AuctionRepository
+    create_auction(session, server_id, property_id)
+    get_auction_by_id(session, auction_id)
+    set_cost(session, cost)
+
+class ServerRepository
+    create_server(session, ip, name, map)
+    get_server_by_id(session, server_id)
+    set_ip(session, server_id, ip)
+    set_map(session, server_id, map)
+```
+</details>
+
 </details>
