@@ -31,3 +31,15 @@ body.light-mode footer {
     background-color: #f8f9fa;
     color: #000000;
 }
+.navbar {
+    background-color: #f8f9fa !important; /* Light gray background */
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #007bff !important; /* Blue logo */
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
