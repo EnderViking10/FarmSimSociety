@@ -6,32 +6,34 @@ FarmSim Society is a Farming Simulator community. The 3 components are the websi
 <summary>Database Schema</summary>
 
 - users
-    - id Integer Primary Key
-    - username String
-    - discord_id Integer
-    - join_date DATETIME DEFAULT DATETIME NOW
-    - is_admin Boolean DEFAULT false
-    - farm_manager Boolean DEFAULT false
-- bank
     - id INTEGER PRIMARY KEY
-    - discord_id INTEGER FOREIGN KEY users(discord_id)
-    - balance INTEGER default 10000
+    - username STRING
+    - discord_id INTEGER
+    - join_date DATETIME DEFAULT DATETIME NOW
+    - admin BOOLEAN DEFAULT FALSE
+    - farm_manager BOOLEAN DEFAULT FALSE
+    - balance INTEGER DEFAULT 10000
 - servers
     - id INTEGER PRIMARY KEY
-    - ip String
-    - name String
-    - map String
+    - ip STRING
+    - name STRING
+    - map STRING
 - user_servers
-    - user_id Integer
-    - server_id Integer
+    - user_id INTEGER FOREIGN KEY REFERENCES users(id)
+    - server_id INTEGER FOREIGN KEY REFERENCES servers(id)
     - PRIMARY KEY (user_id, server_id)
-    - FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    - FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE
 - properties
-  - id Integer primary key
-  - property_id integer
-  - discord_id INTEGER FOREIGN KEY users(discord_id)
-  - server_id INTEGER FOREIGN KEY servers(id)
+    - id INTEGER PRIMARY KEY
+    - property_id INTEGER
+    - server_id INTEGER FOREIGN KEY servers(id)
+    - user_id INTEGER FOREIGN KEY users(id)
+    - image STRING
+    - size INTEGER
+    - price INTEGER
+- auction
+    - id INTEGER PRIMARY KEY
+    - server_id INTEGER FOREIGN KEY REFERENCES servers(id)
+    - property_id INTEGER FOREIGN KEY REFERENCES properties(id)
 
 </details>
 
@@ -134,8 +136,9 @@ The website component of the community
 <details>
 <summary>Todo</summary>
 
-- Add notification system 
-  - auction house
+- Add notification system
+    - auction house
+
 </details>
 
 </details>

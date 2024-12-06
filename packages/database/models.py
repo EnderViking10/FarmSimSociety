@@ -39,6 +39,7 @@ class Properties(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     server_id = Column(Integer, ForeignKey("servers.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     image = Column(String, nullable=False)
     size = Column(Integer, nullable=False)
     price = Column(Integer, nullable=False)
