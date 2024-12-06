@@ -203,8 +203,11 @@ class ServerRepository
     set_map(session, server_id, map)
     
 class PropertyRepository
-    create_property(session, server_id, user_id, image, size)
-    get_property_by_id(session, property_id)
+    create_property(session, server_id, user_id, property_number, image, size)
+    get_property_by_number(session, server_id, property_number)
+    set_user(session, server_id, property_number, user_id)
+    set_image(session, server_id, property_number, image)
+    set_size(session, server_id, property_number, size)
 ```
 </details>
 
