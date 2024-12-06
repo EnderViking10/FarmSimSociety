@@ -34,6 +34,7 @@ FarmSim Society is a Farming Simulator community. The 3 components are the websi
     - id INTEGER PRIMARY KEY
     - server_id INTEGER FOREIGN KEY REFERENCES servers(id)
     - property_id INTEGER FOREIGN KEY REFERENCES properties(id)
+    - cost INTEGER
 
 </details>
 
