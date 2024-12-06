@@ -57,10 +57,6 @@ The bot component of the community
 
 <br/>
 
-
-
-<br/>
-
 <details>
 <summary>Alembic commands</summary>
 
@@ -123,6 +119,7 @@ alembic history
 - Log every command run
     - To channel
     - More verbose
+- Add more detail to help command
 
 </details>
 </details>
@@ -194,6 +191,7 @@ class UserRepository()
 class AuctionRepository
     create_auction(session, server_id, property_id)
     get_auction_by_id(session, auction_id)
+    get_all_auctions(session)
     set_cost(session, cost)
 
 class ServerRepository
