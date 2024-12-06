@@ -1,6 +1,6 @@
 from flask import render_template
 
-from main import bp
+from auction import bp
 
 
 @bp.route('/', methods=['GET', 'POST'])

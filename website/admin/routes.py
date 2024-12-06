@@ -11,6 +11,7 @@ def admin_required(function):
     def decorated_view(*args, **kwargs):
         if not current_user.admin:
             flash('You must be an admin to see this page')
+            print(current_user)
             return redirect(url_for('main.index'))
         return function(*args, **kwargs)
 

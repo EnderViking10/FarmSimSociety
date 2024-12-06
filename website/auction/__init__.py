@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-bp = Blueprint('main', __name__, template_folder='templates')
+bp = Blueprint('auction', __name__, template_folder='templates')
 
-from main import routes
+from auction import routes
