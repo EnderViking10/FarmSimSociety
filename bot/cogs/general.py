@@ -11,7 +11,6 @@ class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
-        self.connected_clients = set()  # WebSocket connections
 
     # Event Listener: On Member Join
     @commands.Cog.listener()
@@ -44,38 +43,7 @@ class General(commands.Cog):
             return
         UserRepository.update_username(self.bot.session, before.id, after.name)
 
-    # Sync Discord Messages to FS25
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
-        """Forwards Discord messages to the FS25 server."""
-        if message.author.bot:
-            return
-
-        # Replace with your logic to map server_id and channel_id
-        server_id = "your_unique_server_id"
-        channel_id = 123456789012345678  # Example channel ID
-
-        # Check if the message is in the linked FS25 channel
-        if message.channel.id == channel_id:
-            payload = {
-                "event": "discord_message",
-                "server_id": server_id,
-                "username": message.author.name,
-                "message": message.content,
-            }
-            if self.connected_clients:
-                await asyncio.gather(*(client.send(json.dumps(payload)) for client in self.connected_clients))
-            else:
-                await message.channel.send("No FS25 servers connected to receive this message.")
-
 
 async def setup(bot):
     """Loads the General cog into the bot."""
-    cog = General(bot)
-
-    # Retrieve WebSocket connections from WebSocketHandler cog
-    websocket_handler = bot.get_cog("WebSocketHandler")
-    if websocket_handler:
-        cog.connected_clients = websocket_handler.connected_clients
-
-    await bot.add_cog(cog)
+    await bot.add_cog(General(bot))

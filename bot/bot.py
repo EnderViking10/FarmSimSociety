@@ -1,7 +1,7 @@
 import os
 
 import discord
-from database import Database
+from database import Database, Base
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -12,8 +12,6 @@ load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
 TOKEN = os.getenv("DISCORD_TOKEN")
 PREFIX = os.getenv("COMMAND_PREFIX", "!")
-WEBSOCKET_HOST = os.getenv("WEBSOCKET_HOST", "0.0.0.0")
-WEBSOCKET_PORT = int(os.getenv("WEBSOCKET_PORT", 8765))
 DATABASE_URL = os.getenv("DATABASE_URL", 'sqlite:///' + os.path.join(basedir, '../data/data.db'))
 
 # Intents
@@ -31,6 +29,8 @@ class Bot(commands.Bot):
     async def on_ready(self):
         """Runs when the bot is ready."""
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
+
+        Base.metadata.create_all(bind=self.db.engine)
 
         # Load all cogs in the cogs/ folder
         for filename in os.listdir("./cogs"):

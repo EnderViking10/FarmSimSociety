@@ -1,9 +1,9 @@
+import discord
+from database import UserRepository, ServerRepository
+from database.repository import PropertyRepository
 from discord.ext import commands
-from utils.permissions import has_any_role
-import asyncio
-import json
 
-from packages.database import UserRepository
+from utils.permissions import has_any_role
 
 
 class Admin(commands.Cog):
@@ -32,13 +32,6 @@ class Admin(commands.Cog):
             else:
                 await ctx.reply(response_message)
 
-    async def send_to_clients(self, payload):
-        """Sends a JSON payload to all connected WebSocket clients."""
-        if self.connected_clients:
-            await asyncio.gather(*(client.send(json.dumps(payload)) for client in self.connected_clients))
-        else:
-            raise RuntimeError("No FS25 servers connected.")
-
     @commands.hybrid_command(name="add_money", description="Add money to a farm in FS25")
     @has_any_role("Owner", "Co Owner")
     async def add_money(self, ctx: commands.Context, user: discord.User, amount: int):
@@ -56,27 +49,71 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="remove_money", description="Remove money from a farm in FS25")
     @has_any_role("Owner", "Co Owner")
-    async def remove_money(self, ctx: commands.Context, server_id: int, farm_id: int, amount: int):
+    async def remove_money(self, ctx: commands.Context, user: discord.User, amount: int):
         """Removes money from a specific farm."""
         if amount <= 0:
             await ctx.reply("Amount must be greater than 0!")
             return
 
-
-
         try:
-            await ctx.reply(f"Requested to remove ${amount} from Farm {farm_id}.")
+            await ctx.reply(f"Removed {amount} from {user.name}")
         except RuntimeError as e:
             await ctx.reply(str(e))
+
+    @commands.hybrid_group(name="property", description="Deals with property")
+    async def property_group(self, ctx: commands.Context):
+        pass
+
+    @property_group.command(name="add", description="Add a property")
+    @has_any_role("Owner", "Co Owner")
+    async def add_property(self, ctx: commands.Context, server_id: int, property_number: int, image_path: str,
+                           size: int, price: int):
+        """Adds a property to a specific farm."""
+        if property_number < 0:
+            return await ctx.reply("Property ID must be greater than 0!")
+
+        server = ServerRepository.get_server_by_id(self.bot.session, server_id)
+        if server is None:
+            return await ctx.reply("Server ID doesn't exist!")
+
+        property = PropertyRepository.get_property(self.bot.session, server_id, property_number)
+        if property:
+            return await ctx.reply("Property already exists!")
+
+        property = PropertyRepository.create_property(self.bot.session, server_id=server_id,
+                                                      property_number=property_number,
+                                                      image=image_path, size=size, price=price)
+
+        return await ctx.send("Property added!")
+
+    @commands.hybrid_group(name="server", description="Deals with server")
+    async def server_group(self, ctx: commands.Context):
+        pass
+
+    @server_group.command(name="add", description="Add a server")
+    @has_any_role("Owner", "Co Owner")
+    async def add_server(self, ctx: commands.Context, name: str, map: str, ip: str = None):
+        server = ServerRepository.create_server(self.bot.session, ip=ip, name=name, map=map)
+
+        return await ctx.send(f"{server.id} is the servers number")
+
+    @commands.command(name="initdb", description="Initialize database")
+    @has_any_role("Owner", "Co Owner")
+    async def init_db(self, ctx: commands.Context):
+        """Initializes the database."""
+        members = ctx.guild.members
+        for member in members:
+            if member.bot:
+                continue
+            if UserRepository.get_user_by_discord_id(self.bot.session, member.id):
+                continue
+            UserRepository.create_user(self.bot.session, username=member.name, discord_id=member.id)
+
+        await ctx.reply("Database initialized!")
 
 
 async def setup(bot):
     """Loads the Admin cog into the bot."""
     cog = Admin(bot)
-
-    # Retrieve WebSocket connections from WebSocketHandler cog
-    websocket_handler = bot.get_cog("WebSocketHandler")
-    if websocket_handler:
-        cog.connected_clients = websocket_handler.connected_clients
 
     await bot.add_cog(cog)

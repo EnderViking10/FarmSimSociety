@@ -13,6 +13,8 @@ login = LoginManager()
 db = Database(Config.SQLALCHEMY_DATABASE_URI)
 session = db.get_session()
 
+Base.metadata.create_all(bind=db.engine)
+
 
 def create_app(config_class=Config):
     # Create and configure the app
@@ -42,10 +44,6 @@ def create_app(config_class=Config):
 
     from auction import bp as auction_bp
     app.register_blueprint(auction_bp, url_prefix='/auction')
-
-    @app.cli.command('initdb')
-    def initdb():
-        Base.metadata.create_all(bind=db.engine)
 
     return app
 
