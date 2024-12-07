@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extend base.html %}
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,6 +53,7 @@
                 <button id="theme-toggle" class="btn btn-outline-light">Switch to Light Mode</button>
             </div>
         </div>
+
     </div>
 </nav>
 
@@ -66,8 +67,8 @@
             {name: "Profile", link: "/profile"},
             {name: "Settings", link: "/settings"},
             {name: "Rules", link: "/rules"},
+            {name: "Contracts", link: "/contracts"},
             {name: "Logout", link: "/logout"},
-
         ];
 
         dropdown.innerHTML = ''; // Clear default items
@@ -135,3 +136,5 @@
 </script>
 </body>
 </html>
+
+{% block content %}
