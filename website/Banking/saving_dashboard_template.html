@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Your Savings Account</h1>
+<p>Balance: <strong>${{ account.balance | round(2) }}</strong></p>
+<p>Goal: <strong>${{ account.goal | round(2) if account.goal else 'Not Set' }}</strong></p>
+
+<h2>Set a Savings Goal</h2>
+<form method="POST" action="/savings">
+    <input type="number" name="goal" step="0.01" placeholder="Enter your goal" required>
+    <button type="submit" class="btn btn-primary">Set Goal</button>
+</form>
+
+<h2>Make a Transaction</h2>
+<form method="POST" action="/savings/transaction">
+    <input type="number" name="amount" step="0.01" placeholder="Enter amount" required>
+    <button type="submit" name="action" value="deposit" class="btn btn-success">Deposit</button>
+    <button type="submit" name="action" value="withdraw" class="btn btn-danger">Withdraw</button>
+</form>
+
+<h2>Transaction History</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ transaction.action | capitalize }}</td>
+            <td>${{ transaction.amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
