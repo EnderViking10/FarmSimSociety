@@ -1,0 +1,140 @@
+{% extend base.html %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Navbar</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- custom css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">FarmSim Society</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/auctions">Auctions</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Menu
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="dynamicDropdown">
+                        <!-- Dynamic content will be inserted here -->
+                        <li><a class="dropdown-item" href="#">Default Item 1</a></li>
+                        <li><a class="dropdown-item" href="#">Default Item 2</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">Contact</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <!-- User account options -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+            </ul>
+            <div class="ms-auto">
+                <button id="theme-toggle" class="btn btn-outline-light">Switch to Light Mode</button>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Example of dynamically populating the dropdown
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdown = document.getElementById('dynamicDropdown');
+        const items = [
+            {name: "Profile", link: "/profile"},
+            {name: "Settings", link: "/settings"},
+            {name: "Rules", link: "/rules"},
+            {name: "Contracts", link: "/contracts"},
+            {name: "Logout", link: "/logout"},
+        ];
+
+        dropdown.innerHTML = ''; // Clear default items
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a class="dropdown-item" href="${item.link}">${item.name}</a>`;
+            dropdown.appendChild(li);
+
+        });
+    })
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+    const navbar = document.getElementById("navbar");
+    const footer = document.getElementById("footer");
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    // Check saved theme in localStorage
+    if (localStorage.getItem("theme") === "light-mode") {
+        setLightMode();
+    }
+
+    themeToggle.addEventListener("click", () => {
+        if (body.classList.contains("dark-mode")) {
+            setLightMode();
+        } else {
+            setDarkMode();
+        }
+    });
+
+    function setLightMode() {
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        navbar.classList.remove("navbar-dark", "bg-dark");
+        navbar.classList.add("navbar-light", "bg-light");
+        footer.classList.remove("bg-dark", "text-light");
+        footer.classList.add("bg-light", "text-dark");
+        navLinks.forEach(link => {
+            link.classList.add("text-dark");
+            link.classList.remove("text-light");
+        });
+        themeToggle.classList.remove("btn-outline-light");
+        themeToggle.classList.add("btn-outline-dark");
+        themeToggle.textContent = "Switch to Dark Mode";
+        localStorage.setItem("theme", "light-mode");
+    }
+
+    function setDarkMode() {
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        navbar.classList.remove("navbar-light", "bg-light");
+        navbar.classList.add("navbar-dark", "bg-dark");
+        footer.classList.remove("bg-light", "text-dark");
+        footer.classList.add("bg-dark", "text-light");
+        navLinks.forEach(link => {
+            link.classList.add("text-light");
+            link.classList.remove("text-dark");
+        });
+        themeToggle.classList.remove("btn-outline-dark");
+        themeToggle.classList.add("btn-outline-light");
+        themeToggle.textContent = "Switch to Light Mode";
+        localStorage.setItem("theme", "dark-mode");
+    }
+
+</script>
+</body>
+</html>
+
+{% block content %}

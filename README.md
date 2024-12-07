@@ -136,6 +136,7 @@ The website component of the community
 
 - Add notification system
     - auction house
+    - fix dark mode toggle bar on main
 
 </details>
 

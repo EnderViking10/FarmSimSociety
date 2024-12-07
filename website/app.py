@@ -18,7 +18,7 @@ def create_app(config_class=Config):
     # Create and configure the app
     app = Flask(__name__)
     app.config.from_object(config_class)
-    app.config['SESSION_COOKIE_SAMESITE'] = "Lax"
+    app.config['SESSION_COOKIE_SAME SITE'] = "Lax"
     app.config['SESSION_COOKIE_SECURE'] = False
 
     # init all the packages
