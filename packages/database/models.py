@@ -29,7 +29,7 @@ class Server(Base):
     __tablename__ = "servers"
 
     id = Column(Integer, primary_key=True, index=True)
-    ip = Column(String, nullable=False)
+    ip = Column(String, nullable=True)
     name = Column(String, nullable=False)
     map = Column(String, nullable=False)
 
@@ -53,3 +53,18 @@ class Auction(Base):
     server_id = Column(Integer, ForeignKey("servers.id"), nullable=False)
     property_id = Column(Integer, ForeignKey("properties.id"), nullable=False)
     cost = Column(Integer)
+    timeout = Column(DateTime, nullable=False)
+    highest_bidder = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+
+class Contracts(Base):
+    __tablename__ = "contracts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    server_id = Column(Integer, ForeignKey("servers.id"), nullable=False)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    status = Column(String, nullable=False)
+    price = Column(Integer, nullable=False)
+    contractor_id = Column(Integer, ForeignKey("users.id"), nullable=True)
