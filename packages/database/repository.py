@@ -8,8 +8,8 @@ from .models import User, Auction, Server, Properties, Contracts
 
 class UserRepository:
     @staticmethod
-    def create_user(session: Session, username: str, discord_id: int, admin: bool = False) -> User:
-        user = User(username=username, discord_id=discord_id, admin=admin)
+    def create_user(session: Session, username: str, display_name: str, discord_id: int, admin: bool = False) -> User:
+        user = User(username=username, display_name=display_name, discord_id=discord_id, admin=admin)
         session.add(user)
         session.commit()
         session.refresh(user)
@@ -40,6 +40,13 @@ class UserRepository:
         user = UserRepository.get_user_by_discord_id(session, discord_id)
         user.username = username
         session.commit()
+
+    @staticmethod
+    def update_display_name(session: Session, discord_id: int, display_name: str) -> None:
+        user = UserRepository.get_user_by_discord_id(session, discord_id)
+        user.display_name = display_name
+        session.commit()
+        session.refresh(user)
 
 
 class AuctionRepository:
@@ -119,8 +126,8 @@ class ContractRepository:
         return contract
 
     @staticmethod
-    def get_all_contracts(session: Session) -> list[Contracts | None]:
-        return session.query(Contract).all()
+    def get_all_contracts(session: Session) -> list[Type[Contracts]]:
+        return session.query(Contracts).all()
 
     @staticmethod
     def set_price(session: Session, contract_id: int, price: int) -> None:

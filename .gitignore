@@ -9,3 +9,4 @@ __pycache__/
 .log/
 bot/bot_errors.log
 bot/bot_info.log
+bot/db.sqlite

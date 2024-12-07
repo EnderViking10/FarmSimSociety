@@ -33,7 +33,7 @@ class General(commands.Cog):
                 continue
             if UserRepository.get_user_by_discord_id(self.bot.session, member.id):
                 continue
-            UserRepository.create_user(self.bot.session, username=member.name, discord_id=member.id)
+            UserRepository.create_user(self.bot.session, username=member.name, display_name=member.display_name, discord_id=member.id)
 
     # Event Listener: On User Update
     @commands.Cog.listener()
