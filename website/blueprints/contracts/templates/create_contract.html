@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Create New Contract</h1>
+    <form method="POST" action="{{ form_action }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.title.label(class="form-label text-light") }}
+            {{ form.title(class="form-control bg-dark text-light", placeholder="e.g. Harvest Work") }}
+        </div>
+        <div class="mb-3">
+            {{ form.description.label(class="form-label text-light") }}
+            {{ form.description(class="form-control bg-dark text-light", placeholder="e.g. Harvest field 25 on server 1 with the Case combine.") }}
+        </div>
+        <div class="mb-3">
+            {{ form.server_id.label(class="form-label text-light") }}
+            {{ form.server_id(class="form-select bg-dark text-light") }}
+        </div>
+        <div class="mb-3">
+            {{ form.price.label(class="form-label text-light") }}
+            {{ form.price(class="form-control bg-dark text-light", placeholder="e.g., 5000") }}
+        </div>
+        <div class="mb-3">
+            {{ form.type.label(class="form-label text-light") }}
+            {{ form.type(class="form-select bg-dark text-light") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

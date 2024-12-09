@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="mb-4">Open Contracts</h1>
+
+    <!-- Add Contract Button -->
+    <a href="{{ url_for('contracts.create_contract') }}" class="btn btn-primary mb-4">New Contract</a>
+
+    <div class="mb-4">
+        <a href="{{ url_for('contracts.index') }}" class="btn btn-success">Open Contracts</a>
+        <a href="{{ url_for('contracts.accepted_contracts') }}" class="btn btn-warning">Accepted Contracts</a>
+        <a href="{{ url_for('contracts.completed_contracts') }}" class="btn btn-primary">Completed Contracts</a>
+    </div>
+
+    <!-- Contract Table -->
+    <table class="table table-bordered table-dark table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Server Name</th>
+            <th>Owner</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for contract in contracts.items %}
+            <tr>
+                <td>{{ contract.server.name }} ({{ contract.server.id }})</td>
+                <td>{{ contract.user.display_name }}</td>
+                <td>{{ contract.title }}</td>
+                <td>{{ contract.description }}</td>
+                <td>{{ contract.type }}</td>
+                <td>{{ contract.price }}</td>
+                <td>
+                    {% if current_user.id == contract.user_id %}
+                        <a href="{{ url_for('contracts.edit_contract', contract_id=contract.id) }}"
+                           class="btn btn-primary btn-sm">Edit</a>
+                        <form method="POST" action="{{ url_for('contracts.delete_contract', contract_id=contract.id) }}"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('contracts.accept_contract', contract_id=contract.id) }}"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if contracts.has_prev %}
+                <li class="page-item">
+                    <a class="page-link bg-dark text-light"
+                       href="{{ url_for('contracts.index', page=contracts.prev_num) }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link bg-dark text-light">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for page in range(1, contracts.pages + 1) %}
+                <li class="page-item {% if page == contracts.page %}active{% endif %}">
+                    <a class="page-link bg-dark text-light"
+                       href="{{ url_for('contracts.index', page=page) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+
+            {% if contracts.has_next %}
+                <li class="page-item">
+                    <a class="page-link bg-dark text-light"
+                       href="{{ url_for('contracts.index', page=contracts.next_num) }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link bg-dark text-light">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

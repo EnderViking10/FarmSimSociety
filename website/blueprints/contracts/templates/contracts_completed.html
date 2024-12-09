@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="mb-4">Completed Contracts</h1>
+    <div class="mb-4">
+        <a href="{{ url_for('contracts.index') }}" class="btn btn-success">Open Contracts</a>
+        <a href="{{ url_for('contracts.accepted_contracts') }}" class="btn btn-warning">Accepted Contracts</a>
+        <a href="{{ url_for('contracts.completed_contracts') }}" class="btn btn-primary">Completed Contracts</a>
+    </div>
+    <!-- Reuse the same table structure from contracts.html -->
+    {% include 'contracts_table.html' %}
+{% endblock %}

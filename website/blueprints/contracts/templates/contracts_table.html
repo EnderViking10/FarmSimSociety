@@ -1,0 +1,81 @@
+<table class="table table-bordered table-dark table-striped">
+    <thead class="table-dark">
+    <tr>
+        <th>Server Name</th>
+        <th>Owner</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Contractor</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for contract in contracts.items %}
+        <tr>
+            <td>{{ contract.server.name }} ({{ contract.server.id }})</td>
+            <td>{{ contract.user.display_name }}</td>
+            <td>{{ contract.title }}</td>
+            <td>{{ contract.description }}</td>
+            <td>{{ contract.contractor.display_name if contract.contractor else 'N/A' }}</td>
+            <td>{{ contract.type }}</td>
+            <td>{{ contract.price }}</td>
+            <td>
+                {% if contract.status == 'open' %}
+                    <span class="badge bg-success text-dark">Open</span>
+                {% elif contract.status == 'accepted' %}
+                    <span class="badge bg-warning text-dark">Accepted</span>
+                {% elif contract.status == 'completed' %}
+                    <span class="badge bg-primary text-light">Completed</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if contract.status == 'accepted' and
+                      (current_user.id == contract.user_id or current_user.id == contract.contractor_id) %}
+                    <form method="POST" action="{{ url_for('contracts.complete_contract', contract_id=contract.id) }}"
+                          class="d-inline">
+                        <button type="submit" class="btn btn-primary btn-sm">Complete</button>
+                    </form>
+                {% elif contract.status == 'open' and current_user.id != contract.user_id %}
+                    <form method="POST" action="{{ url_for('contracts.accept_contract', contract_id=contract.id) }}"
+                          class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination justify-content-center">
+        {% if contracts.has_prev %}
+            <li class="page-item">
+                <a class="page-link bg-dark text-light" href="{{ url_for(request.endpoint, page=contracts.prev_num) }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link bg-dark text-light">Previous</span>
+            </li>
+        {% endif %}
+
+        {% for page in range(1, contracts.pages + 1) %}
+            <li class="page-item {% if page == contracts.page %}active{% endif %}">
+                <a class="page-link bg-dark text-light" href="{{ url_for(request.endpoint, page=page) }}">{{ page }}</a>
+            </li>
+        {% endfor %}
+
+        {% if contracts.has_next %}
+            <li class="page-item">
+                <a class="page-link bg-dark text-light" href="{{ url_for(request.endpoint, page=contracts.next_num) }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link bg-dark text-light">Next</span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

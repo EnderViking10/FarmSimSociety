@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Auction{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Create New Auction</h1>
+
+    <form method="POST" action="{{ url_for('auction.create_auction') }}">
+        <div class="mb-3">
+            <label for="property_id" class="form-label text-light">Select Property</label>
+            <select id="property_id" name="property_id" class="form-select bg-dark text-light">
+                {% for property in properties %}
+                    <option value="{{ property.id }}">
+                        {{ property.property_number }} - {{ property.size }} acres (Server: {{ property.server.name }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="starting_bid" class="form-label text-light">Starting Bid</label>
+            <input type="number" id="starting_bid" name="starting_bid" class="form-control bg-dark text-light"
+                   placeholder="e.g., 1000" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="timeout_hours" class="form-label text-light">Auction Duration (Hours)</label>
+            <select id="timeout_hours" name="timeout_hours" class="form-select bg-dark text-light">
+                <option value="12">12 Hours</option>
+                <option value="24">24 Hours</option>
+                <option value="36">36 Hours</option>
+                <option value="48">48 Hours</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Auction</button>
+    </form>
+{% endblock %}

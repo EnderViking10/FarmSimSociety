@@ -7,6 +7,8 @@ from database.repository import PropertyRepository, ServerRepository
 from discord.ext import commands
 from discord.ui import Button, View
 
+from utils import send_secret_message
+
 
 class Auction(commands.Cog):
     def __init__(self, bot):
@@ -53,7 +55,6 @@ class Auction(commands.Cog):
         embed_dict = {
             'title': 'Auction',
             'description': 'Land auction',
-            'thumbnail': image,
             'color': 2,
             'fields': [
                 {'name': 'Server', 'value': property.server_id},
@@ -64,17 +65,8 @@ class Auction(commands.Cog):
             ]
         }
 
-        embed = discord.Embed()
-        embed.title = f'Auction number: {auction.id}'
-        embed.description = f'End time: {end_time.strftime("%D %H:%M")}'
-        embed.add_field(name='Server number', value=auction.server_id, inline=True)
-        embed.add_field(name="Property number", value=auction.property_id, inline=True)
-        embed.add_field(name="Cost", value=auction.cost, inline=True)
-        await ctx.guild.get_channel(int(os.getenv('AUCTION_CHANNEL'))).send(embed=embed, file=image)
-
-    @auction.command(name="bid", description="Bid on an auction")
-    async def bid(self, ctx: commands.Context, auction_id: int, amount: int):
-        user = UserRepository.get_user_by_discord_id(self.bot.session, ctx.author.id)
+        embed = discord.Embed().from_dict(embed_dict)
+        await ctx.guild.get_channel(int(os.getenv('AUCTION_CHANNEL'))).send(embed=embed)
 
 
 async def setup(bot):

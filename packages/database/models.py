@@ -4,7 +4,7 @@ from flask_login import UserMixin
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, DateTime, Table
 from sqlalchemy.orm import relationship, backref
 
-from .db import Base
+from .database import Base
 
 # Many-to-Many association table
 user_servers = Table(

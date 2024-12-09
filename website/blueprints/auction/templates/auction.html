@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Auctions{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Active Auctions</h1>
+
+    <!-- New Auction Button -->
+    <a href="{{ url_for('auction.create_auction') }}" class="btn btn-primary mb-4">New Auction</a>
+
+    <table class="table table-dark table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Property</th>
+            <th>Server</th>
+            <th>Current Bid</th>
+            <th>Highest Bidder</th>
+            <th>End Date/Time</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for auction in auctions %}
+            <tr>
+                <td>{{ auction.property.property_number }} - {{ auction.property.size }} acres</td>
+                <td>{{ auction.server.name }}</td>
+                <td>${{ auction.cost }}</td>
+                <td>{{ auction.highest_bidder_user.display_name if auction.highest_bidder_user else 'No Bids' }}</td>
+                <td>
+                    <span class="auction-end-time" data-end-time="{{ auction.timeout.isoformat() }}"></span>
+                </td>
+                <td>
+                    {% if not auction.property.owner or auction.property.owner.id != current_user.id %}
+                        <form method="POST" action="{{ url_for('auction.place_bid', auction_id=auction.id) }}">
+                            <button type="submit" class="btn btn-success btn-sm">Bid $5000</button>
+                        </form>
+                    {% else %}
+                        <span class="text-muted">Your Auction</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not auctions %}
+        <p class="text-light">No active auctions at the moment.</p>
+    {% endif %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const endTimes = document.querySelectorAll(".auction-end-time");
+            endTimes.forEach(span => {
+                const endTimeISO = span.getAttribute("data-end-time");
+                if (endTimeISO) {
+                    const endTime = new Date(endTimeISO); // Parse ISO date
+                    const formattedEndTime = endTime.toLocaleString('en-US', {
+                        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Ensure user's time zone
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false // Force 24-hour format
+                    });
+                    span.textContent = formattedEndTime;
+                } else {
+                    span.textContent = "Invalid Time";
+                }
+            });
+        });
+    </script>
+{% endblock %}
