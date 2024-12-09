@@ -8,6 +8,7 @@ from utils import Auction, Properties, db
 
 
 @bp.route('/', methods=['GET'])
+@login_required
 def index():
     auctions = Auction.query.all()
     return render_template('auction.html', auctions=auctions)
@@ -19,10 +20,9 @@ def create_auction():
     if request.method == 'POST':
         property_id = request.form.get('property_id')
         starting_bid = request.form.get('starting_bid', type=int)
-        timeout_hours = request.form.get('timeout_hours', type=int)
 
         # Validate the inputs
-        if not property_id or not starting_bid or not timeout_hours:
+        if not property_id or not starting_bid:
             flash("All fields are required.", "danger")
             return redirect(url_for('auction.create_auction'))
 
@@ -37,7 +37,7 @@ def create_auction():
                 property_id=property_id,
                 server_id=auction_property.server_id,
                 cost=starting_bid,
-                timeout=datetime.utcnow() + timedelta(hours=timeout_hours)
+                timeout=datetime.utcnow() + timedelta(hours=24)
             )
             db.session.add(auction)
             db.session.commit()
