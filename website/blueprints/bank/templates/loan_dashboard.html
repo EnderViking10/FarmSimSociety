@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Loan Dashboard</h1>
+    {% if loan %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Active Loan</h4>
+                <p>Loan Amount: <strong>${{ loan.amount }}</strong></p>
+                <p>Interest Rate: <strong>{{ loan.interest_rate }}%</strong></p>
+                <p>Monthly Payment: <strong>${{ "%.2f" | format(loan.monthly_payment) }}</strong></p>
+                <p>Remaining Balance: <strong>${{ loan.remaining_balance }}</strong></p>
+                <p>Next Payment Due: <strong>{{ loan.next_payment_due.strftime('%Y-%m-%d') }}</strong></p>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <h2>Make a Payment</h2>
+        <form method="POST" action="{{ url_for('bank.make_payment') }}">
+            <div class="mb-3">
+                <label for="payment_amount" class="form-label">Payment Amount</label>
+                <input type="number" step="0.01" class="form-control" id="payment_amount" name="payment_amount"
+                       placeholder="Enter payment amount" required>
+            </div>
+            <button type="submit" class="btn btn-success">Submit Payment</button>
+        </form>
+    {% else %}
+        <p>You do not have an active loan.</p>
+
+        <!-- Loan Application Form -->
+        <h2>Apply for a Loan</h2>
+        <form method="POST" action="{{ url_for('bank.apply_loan') }}">
+            <div class="mb-3">
+                <label for="amount" class="form-label">Loan Amount (Max {{ max_loan }})</label>
+                <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter loan amount"
+                       required>
+            </div>
+            <div class="mb-3">
+                <label for="term" class="form-label">Repayment Term (in months)</label>
+                <select class="form-select" id="term" name="term" required>
+                    <option value="" disabled selected>Select repayment term</option>
+                    <option value="12">12 months (1 year)</option>
+                    <option value="24">24 months (2 years)</option>
+                    <option value="36">36 months (3 years)</option>
+                    <option value="48">48 months (4 years)</option>
+                    <option value="60">60 months (5 years)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+    {% endif %}
+{% endblock %}

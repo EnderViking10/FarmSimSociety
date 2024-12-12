@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Your Savings Account</h1>
+
+    <!-- Savings Account Details -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <p>Balance: <strong>${{ account.amount }}</strong></p>
+            <p>Goal: <strong>${{ account.goal if account.goal else 'Not Set' }}</strong></p>
+        </div>
+    </div>
+
+    <!-- Set a Savings Goal -->
+    <h2>Set a Savings Goal</h2>
+    <form method="POST" action="{{ url_for('bank.set_goal') }}">
+        <div class="input-group mb-3">
+            <input type="number" name="goal" step="0.01" class="form-control" placeholder="Enter your goal" required>
+            <button type="submit" class="btn btn-primary">Set Goal</button>
+        </div>
+    </form>
+
+    <!-- Make a Transaction -->
+    <h2>Make a Transaction</h2>
+    <form method="POST" action="{{ url_for('bank.handle_transaction') }}">
+        <div class="input-group mb-3">
+            <input type="number" name="amount" step="0.01" class="form-control" placeholder="Enter amount" required>
+            <button type="submit" name="action" value="deposit" class="btn btn-success">Deposit</button>
+            <button type="submit" name="action" value="withdraw" class="btn btn-danger">Withdraw</button>
+        </div>
+    </form>
+
+    <!-- Transaction History -->
+    <h2>Transaction History</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ transaction.type | capitalize }}</td>
+                <td>${{ transaction.amount }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ url_for('bank.view_savings', page=pagination.prev_num) }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                {% if page_num %}
+                    {% if page_num == pagination.page %}
+                        <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="{{ url_for('bank.view_savings', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('bank.view_savings', page=pagination.next_num) }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

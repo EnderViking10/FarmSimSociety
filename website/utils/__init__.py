@@ -8,4 +8,5 @@ from .models import (
     Properties,
     Loan,
     Transaction,
+    Savings,
 )

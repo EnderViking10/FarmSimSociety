@@ -6,6 +6,8 @@ from flask_login import login_required, current_user
 from blueprints.auction import bp
 from utils import Auction, Properties, db
 
+# todo create the stuff for when an auction ends, needs to update both users network and bank accounts.
+
 
 @bp.route('/', methods=['GET'])
 @login_required
