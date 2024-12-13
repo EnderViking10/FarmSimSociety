@@ -137,8 +137,11 @@ The website component of the community
 - Add notification system
     - auction house
     - fix dark mode toggle bar on main
-- Auto Auction
+- Admin page
+- Server page
 - Add assets page
+- User profile page
+- Auto Auction
 
 </details>
 

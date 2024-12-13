@@ -57,6 +57,7 @@ def callback():
 
         # Create a User object
         user = User.query.filter_by(discord_id=user_data["id"]).first()
+        # todo create a better way to default balance to 0
         if user is None:
             user = User(
                 discord_id=user_data['id'],
