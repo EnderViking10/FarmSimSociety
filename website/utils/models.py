@@ -16,8 +16,8 @@ class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    username = db.Column(db.String)
-    display_name = db.Column(db.String)
+    username = db.Column(db.String(50))
+    display_name = db.Column(db.String(100))
     discord_id = db.Column(db.Integer, nullable=False, index=True, unique=True)
     join_date = db.Column(db.DateTime, default=datetime.utcnow)
     admin = db.Column(db.Boolean, default=False)
@@ -114,15 +114,15 @@ class Contracts(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
-    title = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
-    status = db.Column(db.String, nullable=False)
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(250), nullable=False)
+    status = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     contractor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     start_time = db.Column(db.DateTime, nullable=True)
     end_time = db.Column(db.DateTime, nullable=True)
     payout = db.Column(db.Integer, nullable=True)
-    type = db.Column(db.String, nullable=True)
+    type = db.Column(db.String(50), nullable=True)
 
     # Relationships
     user = db.relationship("User", foreign_keys=[user_id], back_populates="contracts_as_user")
@@ -158,7 +158,7 @@ class Properties(db.Model):
     server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
     property_number = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
-    image = db.Column(db.String, nullable=False)
+    image = db.Column(db.String(50), nullable=False)
     size = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
 
@@ -175,9 +175,9 @@ class Server(db.Model):
     __tablename__ = "servers"
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    ip = db.Column(db.String, nullable=True)
-    name = db.Column(db.String, nullable=False)
-    map = db.Column(db.String, nullable=False)
+    ip = db.Column(db.String(50), nullable=True)
+    name = db.Column(db.String(50), nullable=False)
+    map = db.Column(db.String(50), nullable=False)
 
     # Relationships
     properties = db.relationship("Properties", back_populates="server")
@@ -193,11 +193,11 @@ class Assets(db.Model):
     __tablename__ = "assets"
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    type = db.Column(db.String, nullable=False)
-    name = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
+    type = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String, nullable=False)
+    image = db.Column(db.String(50), nullable=False)
     server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
