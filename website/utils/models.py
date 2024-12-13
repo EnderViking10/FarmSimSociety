@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, index=True)
     username = db.Column(db.String(50))
     display_name = db.Column(db.String(100))
-    discord_id = db.Column(db.Integer, nullable=False, index=True, unique=True)
+    discord_id = db.Column(db.BigInteger, nullable=False, index=True, unique=True)
     join_date = db.Column(db.DateTime, default=datetime.utcnow)
     admin = db.Column(db.Boolean, default=False)
     balance = db.Column(db.Integer, nullable=False, default=10000)
