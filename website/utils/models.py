@@ -21,9 +21,9 @@ class User(db.Model, UserMixin):
     discord_id = db.Column(db.BigInteger, nullable=False, index=True, unique=True)
     join_date = db.Column(db.DateTime, default=datetime.utcnow)
     admin = db.Column(db.Boolean, default=False)
-    balance = db.Column(db.Integer, nullable=False, default=10000)
+    balance = db.Column(db.Integer, nullable=False, default=0)
     credit_score = db.Column(db.Integer, default=650)
-    net_worth = db.Column(db.Integer, nullable=False, default=10000)
+    net_worth = db.Column(db.Integer, nullable=False, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
