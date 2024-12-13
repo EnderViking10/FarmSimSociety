@@ -13,25 +13,6 @@ migrate = Migrate()
 login = LoginManager()
 
 
-def calculate_interest():
-    """Calculate and add monthly interest to savings accounts."""
-    with app.app_context():  # Ensure the app context is active
-        interest_rate = 0.05 / 12  # 5% annual interest, divided by 12 months
-        savings_accounts = Savings.query.all()
-
-        for account in savings_accounts:
-            if account.amount > 0:  # Only calculate interest for accounts with a balance
-                interest = account.amount * interest_rate
-                account.amount += interest
-
-        db.session.commit()
-
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=calculate_interest, trigger="cron", hour=0, minute=0)  # Run daily at midnight
-scheduler.start()
-
-
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -112,6 +93,23 @@ def create_app(config_class=Config):
         except Exception as e:
             db.session.rollback()
             click.echo(f"Error adding test data: {e}")
+
+    def calculate_interest():
+        """Calculate and add monthly interest to savings accounts."""
+        with app.app_context():  # Ensure the app context is active
+            interest_rate = 0.05 / 12  # 5% annual interest, divided by 12 months
+            savings_accounts = Savings.query.all()
+
+            for account in savings_accounts:
+                if account.amount > 0:  # Only calculate interest for accounts with a balance
+                    interest = account.amount * interest_rate
+                    account.amount += interest
+
+            db.session.commit()
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=calculate_interest, trigger="cron", hour=0, minute=0)  # Run daily at midnight
+    scheduler.start()
 
     return app
 

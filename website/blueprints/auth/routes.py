@@ -5,7 +5,7 @@ from requests.exceptions import HTTPError
 
 from blueprints.auth import bp
 from config import Config
-from utils import User
+from utils import User, db
 
 DISCORD_AUTH_URL = f"{Config.DISCORD_API_BASE_URL}/oauth2/authorize"
 DISCORD_TOKEN_URL = f"{Config.DISCORD_API_BASE_URL}/oauth2/token"
@@ -58,8 +58,13 @@ def callback():
         # Create a User object
         user = User.query.filter_by(discord_id=user_data["id"]).first()
         if user is None:
-            flash("You must join the discord")
-            return redirect(url_for("main.index"))
+            user = User(
+                discord_id=user_data['id'],
+                display_name=user_data['global_name'],
+                username=user_data['username']
+            )
+            db.session.add(user)
+            db.session.commit()
         # Log the user in with Flask-Login
         login_user(user)
 

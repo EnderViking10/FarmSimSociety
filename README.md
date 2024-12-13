@@ -137,6 +137,8 @@ The website component of the community
 - Add notification system
     - auction house
     - fix dark mode toggle bar on main
+- Auto Auction
+- Add assets page
 
 </details>
 
@@ -151,6 +153,7 @@ The FS25 mod component of the community
 
 <details>
 <summary>Todo</summary>
+
 
 </details>
 

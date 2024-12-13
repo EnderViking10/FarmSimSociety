@@ -187,3 +187,17 @@ class Server(db.Model):
 
     def __repr__(self):
         return f"<Server(id={self.id}, name='{self.name}', ip='{self.ip}', map='{self.map}')>"
+
+
+class Assets(db.Model):
+    __tablename__ = "assets"
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    type = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String, nullable=False)
+    server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
