@@ -61,7 +61,9 @@ def callback():
             user = User(
                 discord_id=user_data['id'],
                 display_name=user_data['global_name'],
-                username=user_data['username']
+                username=user_data['username'],
+                balance=0,
+                net_worth=0
             )
             db.session.add(user)
             db.session.commit()
