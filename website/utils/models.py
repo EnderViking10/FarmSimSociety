@@ -39,6 +39,7 @@ class User(db.Model, UserMixin):
     savings = db.relationship("Savings", back_populates="user")
     loans = db.relationship("Loan", back_populates="user")
     servers = db.relationship("Server", secondary=user_servers, back_populates="users")
+    assets = db.relationship("Asset", back_populates="owner")
 
     def __repr__(self):
         return (f"<User(id={self.id}, username='{self.username}', display_name='{self.display_name}', "
@@ -189,7 +190,7 @@ class Server(db.Model):
         return f"<Server(id={self.id}, name='{self.name}', ip='{self.ip}', map='{self.map}')>"
 
 
-class Assets(db.Model):
+class Asset(db.Model):
     __tablename__ = "assets"
 
     id = db.Column(db.Integer, primary_key=True, index=True)
@@ -201,3 +202,9 @@ class Assets(db.Model):
     server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationship
+    owner = db.relationship("User", back_populates="assets")
+
+    def __repr__(self):
+        return f"<Asset(id={self.id}, type={self.type}, name={self.name}, description={self.description})>"

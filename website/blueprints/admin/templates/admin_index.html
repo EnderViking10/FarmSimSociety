@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Admin Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Admin Dashboard</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Users</h2>
+            <form method="GET" action="{{ url_for('admin.index') }}" class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="user_search" value="{{ user_search }}" placeholder="Search users">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+            <ul class="list-group">
+                {% for user in users.items %}
+                    <li class="list-group-item">
+                        {{ user.username }}
+                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-warning btn-sm float-end">Edit</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <nav aria-label="User Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if users.has_prev %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.index', user_page=users.prev_num, user_search=user_search) }}">Previous</a></li>
+                    {% endif %}
+                    {% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == users.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('admin.index', user_page=page_num, user_search=user_search) }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if users.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.index', user_page=users.next_num, user_search=user_search) }}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Servers</h2>
+            <form method="GET" action="{{ url_for('admin.index') }}" class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="server_search" value="{{ server_search }}" placeholder="Search servers">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+            <ul class="list-group">
+                {% for server in servers.items %}
+                    <li class="list-group-item">
+                        {{ server.name }} - {{ server.map }}
+                        <a href="{{ url_for('admin.edit_server', server_id=server.id) }}" class="btn btn-warning btn-sm float-end">Edit</a>
+                    </li>
+                {% endfor %}
+            </ul>
+             <nav aria-label="Server Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if servers.has_prev %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.index', server_page=servers.prev_num, server_search=server_search) }}">Previous</a></li>
+                    {% endif %}
+                    {% for page_num in servers.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == servers.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('admin.index', server_page=page_num, server_search=server_search) }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if servers.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.index', server_page=servers.next_num, server_search=server_search) }}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

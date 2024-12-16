@@ -134,14 +134,22 @@ The website component of the community
 <details>
 <summary>Todo</summary>
 
-- Add notification system
-    - auction house
-    - fix dark mode toggle bar on main
 - Admin page
 - Server page
+- Ticket page
 - Add assets page
 - User profile page
 - Auto Auction
+- Gov contracts
+	- Admin controlable variable for number per year
+	- Admin controlable variable for amount per hour
+		- Lump sum with +- 10%
+- API
+- Make front end look better
+
+- Add notification system
+    - auction house
+    - fix dark mode toggle bar on main
 
 </details>
 
@@ -175,45 +183,6 @@ The Database package being used for the server and the bot
 - Add remove_user method
 - Make ServerRepository methods
 - Make AuctionRepository methods
-</details>
-
-<details>
-<summary>Docs</summary>
-
-``` python
-Class Database
-    get_session()
-
-session = from app import session
-
-class UserRepository()
-    create_user(session, username, discord_id, admin: False)
-    get_user_by_discord_id(session, discord_id)
-    get_user_by_id(session, user_id)
-    add_money(session, discord_id, amount)
-    remove_money(session, discord_id, amount)
-    update_username(session, discord_id, username)
-    remove_user(session, discord_id)
-
-class AuctionRepository
-    create_auction(session, server_id, property_id)
-    get_auction_by_id(session, auction_id)
-    get_all_auctions(session)
-    set_cost(session, cost)
-
-class ServerRepository
-    create_server(session, ip, name, map)
-    get_server_by_id(session, server_id)
-    set_ip(session, server_id, ip)
-    set_map(session, server_id, map)
-    
-class PropertyRepository
-    create_property(session, server_id, user_id, property_number, image, size)
-    get_property_by_number(session, server_id, property_number)
-    set_user(session, server_id, property_number, user_id)
-    set_image(session, server_id, property_number, image)
-    set_size(session, server_id, property_number, size)
-```
 </details>
 
 </details>

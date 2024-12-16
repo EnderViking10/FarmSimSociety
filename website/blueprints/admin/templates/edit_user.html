@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Edit User - {{ user.username }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Edit User: {{ user.username }}</h1>
+
+    <!-- Balance Management Form -->
+    <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" disabled>
+        </div>
+
+        <div class="mb-3">
+            <label for="display_name" class="form-label">Display Name</label>
+            <input type="text" class="form-control" id="display_name" name="display_name" value="{{ user.display_name }}" disabled>
+        </div>
+
+        <h3 class="mt-4">Modify Balance</h3>
+        <div class="input-group mb-3">
+            <input type="number" class="form-control" id="balance" name="balance" placeholder="Enter amount to add/remove">
+            <button type="submit" name="action" value="add_balance" class="btn btn-success">Add Balance</button>
+            <button type="submit" name="action" value="remove_balance" class="btn btn-danger">Remove Balance</button>
+        </div>
+    </form>
+
+    <!-- Properties Management Section -->
+    <h3 class="mt-4">Manage Properties</h3>
+    <ul class="list-group mb-3">
+        {% for property in user.properties %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Property ID: {{ property.id }} - Size: {{ property.size }} - Price: {{ property.price }}
+            <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}" class="d-inline">
+                <input type="hidden" name="property_id" value="{{ property.id }}">
+                <button type="submit" name="action" value="remove_property" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+        <div class="input-group">
+            <select class="form-select" name="property_id_to_add">
+                <option selected disabled>Select a property to add</option>
+                {% for property in available_properties %}
+                <option value="{{ property.id }}">Property ID: {{ property.id }} - Size: {{ property.size }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="action" value="add_property" class="btn btn-primary">Add Property</button>
+        </div>
+    </form>
+
+    <!-- Assets Management Section -->
+    <h3 class="mt-4">Manage Assets</h3>
+    <ul class="list-group mb-3">
+        {% for asset in user.assets %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Asset ID: {{ asset.id }} - Name: {{ asset.name }} - Price: {{ asset.price }}
+            <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}" class="d-inline">
+                <input type="hidden" name="asset_id" value="{{ asset.id }}">
+                <button type="submit" name="action" value="remove_asset" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+        <div class="input-group">
+            <select class="form-select" name="asset_id_to_add">
+                <option selected disabled>Select an asset to add</option>
+                {% for asset in available_assets %}
+                <option value="{{ asset.id }}">Asset ID: {{ asset.id }} - Name: {{ asset.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="action" value="add_asset" class="btn btn-primary">Add Asset</button>
+        </div>
+    </form>
+
+    <!-- Servers Management Section -->
+    <h3 class="mt-4">Manage Servers</h3>
+    <ul class="list-group mb-3">
+        {% for server in user.servers %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Server ID: {{ server.id }} - Name: {{ server.name }}
+            <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}" class="d-inline">
+                <input type="hidden" name="server_id" value="{{ server.id }}">
+                <button type="submit" name="action" value="remove_server" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+        <div class="input-group">
+            <select class="form-select" name="server_id_to_add">
+                <option selected disabled>Select a server to add</option>
+                {% for server in available_servers %}
+                <option value="{{ server.id }}">Server ID: {{ server.id }} - Name: {{ server.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="action" value="add_server" class="btn btn-primary">Add Server</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

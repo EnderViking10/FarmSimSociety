@@ -20,6 +20,7 @@ def login():
         "response_type": "code",
         "scope": "identify email",
     }
+    print(Config.DISCORD_REDIRECT_URI)
     discord_login_url = f"{DISCORD_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in params.items()])}"
     return redirect(discord_login_url)
 
