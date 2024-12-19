@@ -11,7 +11,6 @@ user_servers = db.Table(
     db.Column("server_id", db.Integer, db.ForeignKey("servers.id", ondelete="CASCADE"), primary_key=True),
 )
 
-
 class User(db.Model, UserMixin):
     __tablename__ = "users"
 
@@ -28,11 +27,9 @@ class User(db.Model, UserMixin):
 
     # Relationships
     contracts_as_user = db.relationship("Contracts", back_populates="user", foreign_keys="Contracts.user_id")
-    contracts_as_contractor = db.relationship("Contracts", back_populates="contractor",
-                                              foreign_keys="Contracts.contractor_id")
+    contracts_as_contractor = db.relationship("Contracts", back_populates="contractor", foreign_keys="Contracts.contractor_id")
     properties = db.relationship("Properties", back_populates="owner", foreign_keys="Properties.user_id")
-    auctions_as_highest_bidder = db.relationship("Auction", back_populates="highest_bidder_user",
-                                                 foreign_keys="Auction.highest_bidder")
+    auctions_as_highest_bidder = db.relationship("Auction", back_populates="highest_bidder_user", foreign_keys="Auction.highest_bidder")
     transactions = db.relationship("Transaction", back_populates="transaction_user", foreign_keys="Transaction.user_id")
     sent_transactions = db.relationship("Transaction", foreign_keys="Transaction.sender_id")
     received_transactions = db.relationship("Transaction", foreign_keys="Transaction.recipient_id")
@@ -45,7 +42,7 @@ class User(db.Model, UserMixin):
         return (f"<User(id={self.id}, username='{self.username}', display_name='{self.display_name}', "
                 f"discord_id={self.discord_id}, balance={self.balance}, credit_score={self.credit_score})>")
 
-
+# Auction model
 class Auction(db.Model):
     __tablename__ = "auctions"
 
@@ -65,7 +62,7 @@ class Auction(db.Model):
         return (f"<Auction(id={self.id}, server_id={self.server_id}, property_id={self.property_id}, "
                 f"cost={self.cost}, timeout={self.timeout}, highest_bidder={self.highest_bidder})>")
 
-
+# Transaction model
 class Transaction(db.Model):
     __tablename__ = "transactions"
 
@@ -87,7 +84,7 @@ class Transaction(db.Model):
         return (f"<Transaction(id={self.id}, user_id={self.user_id}, amount={self.amount}, type='{self.type}', "
                 f"recipient_id={self.recipient_id}, sender_id={self.sender_id}, timestamp={self.timestamp})>")
 
-
+# Loan model
 class Loan(db.Model):
     __tablename__ = "loans"
 
@@ -108,88 +105,7 @@ class Loan(db.Model):
         return (f"<Loan(id={self.id}, user_id={self.user_id}, amount={self.amount}, "
                 f"interest_rate={self.interest_rate}, term={self.term}, status={self.status})>")
 
-
-class Contracts(db.Model):
-    __tablename__ = "contracts"
-
-    id = db.Column(db.Integer, primary_key=True, index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
-    title = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String(250), nullable=False)
-    status = db.Column(db.String(50), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    contractor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
-    start_time = db.Column(db.DateTime, nullable=True)
-    end_time = db.Column(db.DateTime, nullable=True)
-    payout = db.Column(db.Integer, nullable=True)
-    type = db.Column(db.String(50), nullable=True)
-
-    # Relationships
-    user = db.relationship("User", foreign_keys=[user_id], back_populates="contracts_as_user")
-    contractor = db.relationship("User", foreign_keys=[contractor_id], back_populates="contracts_as_contractor")
-    server = db.relationship("Server", back_populates="contracts")
-
-    def __repr__(self):
-        return (f"<Contracts(id={self.id}, user_id={self.user_id}, server_id={self.server_id}, "
-                f"title='{self.title}', description='{self.description}', status='{self.status}', "
-                f"price={self.price}, contractor_id={self.contractor_id}, start_time={self.start_time}, "
-                f"end_time={self.end_time}, payout={self.payout}, type='{self.type}')>")
-
-
-class Savings(db.Model):
-    __tablename__ = "savings"
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    goal = db.Column(db.Float, nullable=False)
-
-    # Back reference to the User model
-    user = db.relationship("User", back_populates="savings")
-
-    def __repr__(self):
-        return f"<Savings(id={self.id}, user_id={self.user_id}, amount={self.amount}, goal={self.goal})>"
-
-
-class Properties(db.Model):
-    __tablename__ = "properties"
-
-    id = db.Column(db.Integer, primary_key=True, index=True)
-    server_id = db.Column(db.Integer, db.ForeignKey("servers.id"), nullable=False)
-    property_number = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
-    image = db.Column(db.String(50), nullable=False)
-    size = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-
-    # Relationships
-    server = db.relationship("Server", back_populates="properties")
-    owner = db.relationship("User", back_populates="properties")
-
-    def __repr__(self):
-        return (f"<Properties(id={self.id}, server_id={self.server_id}, property_number={self.property_number}, "
-                f"user_id={self.user_id}, size={self.size}, price={self.price})>")
-
-
-class Server(db.Model):
-    __tablename__ = "servers"
-
-    id = db.Column(db.Integer, primary_key=True, index=True)
-    ip = db.Column(db.String(50), nullable=True)
-    name = db.Column(db.String(50), nullable=False)
-    map = db.Column(db.String(50), nullable=False)
-
-    # Relationships
-    properties = db.relationship("Properties", back_populates="server")
-    auctions = db.relationship("Auction", back_populates="server")
-    contracts = db.relationship("Contracts", back_populates="server")
-    users = db.relationship("User", secondary=user_servers, back_populates="servers")
-
-    def __repr__(self):
-        return f"<Server(id={self.id}, name='{self.name}', ip='{self.ip}', map='{self.map}')>"
-
-
+# Asset model
 class Asset(db.Model):
     __tablename__ = "assets"
 
@@ -208,3 +124,22 @@ class Asset(db.Model):
 
     def __repr__(self):
         return f"<Asset(id={self.id}, type={self.type}, name={self.name}, description={self.description})>"
+
+# Server model (added for context)
+class Server(db.Model):
+    __tablename__ = "servers"
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    ip = db.Column(db.String(50), nullable=True)
+    name = db.Column(db.String(50), nullable=False)
+    map = db.Column(db.String(50), nullable=False)
+
+    # Relationships
+    properties = db.relationship("Properties", back_populates="server")
+    auctions = db.relationship("Auction", back_populates="server")
+    contracts = db.relationship("Contracts", back_populates="server")
+    users = db.relationship("User", secondary=user_servers, back_populates="servers")
+
+    def __repr__(self):
+        return f"<Server(id={self.id}, name='{self.name}', ip='{self.ip}', map='{self.map}')>"
+
