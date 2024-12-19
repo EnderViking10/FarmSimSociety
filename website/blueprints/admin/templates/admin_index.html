@@ -58,7 +58,7 @@
                 {% for server in servers.items %}
                     <li class="list-group-item">
                         {{ server.name }} - {{ server.map }}
-                        <a href="{{ url_for('admin.edit_server', server_id=server.id) }}" class="btn btn-warning btn-sm float-end">Edit</a>
+                        <!-- <a href="{{ url_for('admin.edit_server', server_id=server.id) }}" class="btn btn-warning btn-sm float-end">Edit</a> -->
                     </li>
                 {% endfor %}
             </ul>

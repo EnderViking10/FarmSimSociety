@@ -23,6 +23,7 @@ class Config:
 
     DISCORD_CLIENT_ID = os.environ.get("DISCORD_CLIENT_ID")
     DISCORD_CLIENT_SECRET = os.environ.get("DISCORD_CLIENT_SECRET")
-    DISCORD_REDIRECT_URI = os.environ.get('DISCORD_REDIRECT_URI') or \
-                           "http://127.0.0.1:5000/auth/callback"
+    DISCORD_REDIRECT_URI = "http://127.0.0.1:5000/auth/callback"
     DISCORD_API_BASE_URL = "https://discord.com/api"
+    DISCORD_CLIENT_ID = "1316927090330964031"
+    DISCORD_CLIENT_SECRET = "wcYbkK8Qa7Jo0Db328x-p0bTsIdXYyar"
